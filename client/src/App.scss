@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 8vmin;
+  height: 6vmin;
   pointer-events: visible;
 }
 
@@ -34,4 +34,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.footer{
+  display: block;
+  position: fixed !important;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color:#046B86;
+  color: #d5e2e2;
 }
