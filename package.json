@@ -4,6 +4,7 @@
     "description": "Project for Uptech Solution Assessment",
     "main": "server.ts",
     "scripts": {
+        "client-install": "yarn install --prefix client",
         "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
         "build": "tsc",
         "prestart": "npm run build",
