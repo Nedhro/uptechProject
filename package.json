@@ -4,11 +4,13 @@
     "description": "Project for Uptech Solution Assessment",
     "main": "server.ts",
     "scripts": {
+        "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+        "build": "tsc",
+        "prestart": "npm run build",
         "start": "node server.ts",
         "server": "nodemon server.ts",
         "client": "cd client && yarn start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
