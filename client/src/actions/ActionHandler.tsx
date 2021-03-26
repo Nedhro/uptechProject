@@ -7,6 +7,18 @@ class ActionHandler{
         return axios.post(baseUrl+'/register', data);
     }
 
+    findByUsername(userName: string){
+        return axios.get(baseUrl+'/user/'+userName);
+    }
+
+    updateUser(id:any){
+        return axios.patch(baseUrl+'/user/'+id);
+    }
+
+    deleteUser(id:any){
+        return axios.delete(baseUrl+'/user/'+id);
+    }
+
     getAllUsers() {
         return axios.get(baseUrl+'/users');
     }

@@ -85,13 +85,15 @@ router.post('/register',upload.single('image'), (req, res, next) => {
       newUser.save().then(data =>{
         res.json({
             message: "User created successfully",
-            result: data
+            result: data,
+            status: 201
             });
         })
         .catch(err => {
           console.log(err);
-          res.status(500).json({
-            error: err
+          res.json({
+            error: err,
+            status: 500
           });
         });
       }
@@ -102,6 +104,97 @@ router.post('/register',upload.single('image'), (req, res, next) => {
     });
   });
 });
+
+router.get("/user/:userName", (req, res, next) => {
+  const username = req.params.userName;
+  registerTemplate.findOne({ userName: username })
+    .select('_id name gender dob image regDate status')
+    .exec()
+    .then(doc => {
+      console.log("From database", doc);
+      if (doc) {
+        res.status(200).json({
+            user: doc,
+            status: 200
+        });
+      } else {
+        res
+          .json({ message: "No valid entry found for the username", status: 400 });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+});
+
+router.get("/user/:userId", (req, res, next) => {
+  const id = req.params.userId;
+  registerTemplate.findById(id)
+    .select('_id name gender dob image regDate status')
+    .exec()
+    .then(doc => {
+      console.log("From database", doc);
+      if (doc) {
+        res.status(200).json({
+            user: doc
+        });
+      } else {
+        res
+          .status(404)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+});
+
+router.patch("/user/:userId", (req, res, next) => {
+  const id = req.params.userId;
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  registerTemplate.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+          message: 'User updated',
+          user: result,
+          status: 200
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        error: err,
+        status: 500
+      });
+    });
+});
+
+router.delete("/user/:userId", (req, res, next) => {
+  const id = req.params.userId;
+  registerTemplate.remove({ _id: id })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+          message: 'User deleted',
+          data: result,
+          status: 200
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        error: err,
+        status: 500
+      });
+    });
+});
+
 router.post('/auth', (request, response)=> {
   let username = request.body.userName;
   let password = request.body.password;

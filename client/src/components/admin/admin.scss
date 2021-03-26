@@ -174,8 +174,8 @@
   font-weight: bold;
   border: none;
   border-radius: 10px !important;
-  padding: 10px !important;
-  width: 75% !important;
+  padding: 12px !important;
+  width: 90% !important;
   outline-width: 0 !important;
 }
 
@@ -190,9 +190,9 @@
   border-collapse:collapse !important;
   table-layout: auto !important;
 }
-.table td:first-child {
-  text-align: left !important;
-}​
+// .table td:first-child {
+//   text-align: left !important;
+// }​
 
 div {
     position: relative;

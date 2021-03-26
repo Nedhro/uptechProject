@@ -1,5 +1,5 @@
 import React from "react";
-//import Action from '../../actions/ActionHandler';
+import Action from '../../actions/ActionHandler';
 
 class Registration extends React.Component<any, any>{
    
@@ -15,12 +15,10 @@ class Registration extends React.Component<any, any>{
             gender: this.state.gender,
             image: this.state.image
           };
-          console.log(this.dataConfig);
           this.submitRegister(this.dataConfig);
     }
     changeHandler= e =>{
         this.setState({ [e.target.name]: e.target.value });
-        console.log(this.state.gender);
     }
     constructor(props:any){
         super(props);
@@ -31,33 +29,34 @@ class Registration extends React.Component<any, any>{
             dob: '',
             gender: '',
             image: '',
+            notification: '',
             error: {}
         }
         this.mySubmitHandler =this.mySubmitHandler.bind(this);
         this.changeHandler =this.changeHandler.bind(this);
     }
     componentDidMount(){}
+    
     submitRegister(data: any) {
-        let formData = new FormData();
-        formData.append('name',this.state.name);
-        formData.append('userName',this.state.userName);
-        formData.append('password',this.state.password);
-        formData.append('dob',this.state.dob);
-        formData.append('gender',this.state.gender);
-        formData.append('image',this.state.image);
-        // Action.saveUser(data).then(res=>{
-        //     console.log(res);
-        // })
-        const url = 'http://localhost:5050/api/register';
-        fetch(url, {
-            mode: 'no-cors',
-            method: 'POST',
-            body: formData
+        Action.findByUsername(data.userName).then(res=>{
+            if(res.data.status === 400){
+                Action.saveUser(data).then(res=>{  
+                    this.setState({notification:"User Created Successfully"})
+                    if(res.data.status === 201){
+                        this.props.history.push('/login');
+                    }
+                })
+            }else{
+                this.setState({notification:"Username is already exists"})
+            }
+        }).catch(err=>{
+            console.log(err);
+            this.setState({notification: err})
         })
-            .then(response => console.log('Submitted successfully :'+response))
-            .catch(error => console.log('Form submit error', error))
+       
     }
     render(){
+        const {notification} = this.state;
         return(
             <div className="container">
                 <h2>Registration</h2>
@@ -132,6 +131,9 @@ class Registration extends React.Component<any, any>{
                         <div className="col-9 p-1">
                                 <input type="submit" value="Save" className="btn btn-info p-2 m-2"/>
                                 <input type="reset" value="Reset" className="btn btn-danger p-2 m-2"/>
+                        </div>
+                        <div className="text-danger">
+                            <p className="text-left bg-info font-weight-bold">{notification}</p>
                         </div>
 
                     </form>

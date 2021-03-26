@@ -14,7 +14,8 @@ class AdminPanel extends React.Component<any, any>{
         this.state = {
           error: null,
           isLoaded: false,
-          items: []
+          items: [],
+          notification: ''
         }
     }
     componentDidMount() {
@@ -30,18 +31,19 @@ class AdminPanel extends React.Component<any, any>{
     getRegData(){
         Action.getAllUsers().then(res=>{
             const result = res.data;
-            console.log(result?.users);
             let image = "";
             const datafinal = result?.users?.map((data: any) => {
                     image = "http://localhost:5050/"+data.image;
                 let config = {
-                  "Name": data.name || "",
-                  "Gender": data.gender || "",
-                  "DOB": this.formateDate(data.dob) || "",
-                  "RegDate": this.formateDate(data.regDate),
-                  "Status": data.status === true? "Active": "Inactive",
-                  "Image": image
+                  id: data._id,
+                  "name": data.name,
+                  "gender": data.gender,
+                  "dob": this.formateDate(data.dob),
+                  "regDate": this.formateDate(data.regDate),
+                  "status": data.status === true? "Active": "Inactive",
+                  "image": image
                 };
+                // let config = data;
                 return config;
               });
 
@@ -53,35 +55,82 @@ class AdminPanel extends React.Component<any, any>{
         })
     }
 
+    updateUserInfo(id:any){
+      console.log(id);
+      alert("This is function is under process");
+
+    }
+    deteleUserInfo(id:any){
+      Action.deleteUser(id).then(res=>{
+        if(res.status === 200){
+          this.setState({notification: "User is deleted successfully"})
+        }
+      })
+    }
+
     render(){
         const {
             error,
             isLoaded,
-            items
+            items,
+            notification
           } = this.state;
 
-          const additionalCols = [
-            //   {
-            //       header: "Image",
-            //       td: (items) => {
-            //         return (
-            //           <div >
-            //            <img src={image} height="30" width="20" alt=""/>
-            //           </div>
-            //         )
-            //       }
-            //   },
+          const columns = [
             {
-              header: 'Actions',
+              header: 'name',
+              key: 'name'
+            },
+            {
+              header: 'gender',
+              key: 'gender'
+            },
+            {
+              header: 'DOB',
+              key: 'dob'
+            },
+            {
+              header: 'regDate',
+              key: 'regDate'
+            },
+            {
+              header: 'status',
+              key: 'status'
+            },
+            {
+              header: "Image",
               td: (data) => {
                 return (
-                  <div>
-                   <button className="btn btn-info  m-1" > Edit</button>
-                   <button className="btn btn-danger m-1"> Delete</button>
+                  <div >
+                    <a href={data.image} target="_blank">
+                      <img src={data.image} height="50" width="50" alt=""/>
+                    </a>
+                   
                   </div>
                 )
               }
+          },
+        {
+          header: 'Actions',
+          td: (data) => {
+            return (
+              <div>
+               <button className="btn btn-info  m-1" onClick={() => {
+                 const call = this.updateUserInfo(data.id);
+                 return call;
+               } }> Update</button>
+               <button className="btn btn-danger m-1" onClick={() => {
+                 const call = this.deteleUserInfo(data.id);
+                 return call;
+               } }> Delete</button>
+              </div>
+                )
+              }
             }
+          ]
+
+          const additionalCols = [
+           
           ]
         const tableTitle = "Data Table";
         const downloadExcelProps = {
@@ -100,24 +149,28 @@ class AdminPanel extends React.Component<any, any>{
           } else {
         return(
             <div className="container">
-                <h2> Registration Table</h2>
+                <h2> Table : Registration Data</h2>
                 <ReactFlexyTable
                 className="table table-stripped table-hover table-sm tableReg"
                 data={items}
                 sortable
+                columns = {columns}
                 globalSearch
                 showExcelButton
                 additionalCols={additionalCols}
                 pageText={"Pages #"}
                 rowsText={"Rows : "}
                 searchText={"Filter"}
-                pageSize={10}
-                pageSizeOptions={[10, 20, 50]}
+                pageSize={5}
+                pageSizeOptions={[5, 10, 20, 50]}
                 downloadExcelProps={downloadExcelProps}
                 filteredDataText={"Filtered Data : "}
                 totalDataText={"Total Data :"}
                 downloadExcelText={"Download"}
               />
+               <div className="text-danger">
+                  <p className="text-left bg-info font-weight-bold">{notification}</p>
+                </div>
             </div>
             )}
     }
