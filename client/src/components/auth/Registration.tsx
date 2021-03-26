@@ -1,5 +1,5 @@
 import React from "react";
-import Action from '../../actions/ActionHandler';
+//import Action from '../../actions/ActionHandler';
 
 class Registration extends React.Component<any, any>{
    
@@ -36,17 +36,33 @@ class Registration extends React.Component<any, any>{
         this.mySubmitHandler =this.mySubmitHandler.bind(this);
         this.changeHandler =this.changeHandler.bind(this);
     }
+    componentDidMount(){}
     submitRegister(data: any) {
-        Action.saveUser(data).then(res=>{
-            console.log(res);
+        let formData = new FormData();
+        formData.append('name',this.state.name);
+        formData.append('userName',this.state.userName);
+        formData.append('password',this.state.password);
+        formData.append('dob',this.state.dob);
+        formData.append('gender',this.state.gender);
+        formData.append('image',this.state.image);
+        // Action.saveUser(data).then(res=>{
+        //     console.log(res);
+        // })
+        const url = 'http://localhost:5050/api/register';
+        fetch(url, {
+            mode: 'no-cors',
+            method: 'POST',
+            body: formData
         })
+            .then(response => console.log('Submitted successfully :'+response))
+            .catch(error => console.log('Form submit error', error))
     }
     render(){
         return(
             <div className="container">
                 <h2>Registration</h2>
                 <div className="text-info">
-                    <form className="form-group" onSubmit={this.mySubmitHandler} encType="multipart/form">
+                    <form className="form-group" onSubmit={this.mySubmitHandler} id="regForm">
                         <div className="col-9 p-1">
                             <div className="row">
                                 <div className="col-4 mr-0 text-right">

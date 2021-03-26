@@ -1,5 +1,6 @@
 import React from 'react';
 import {  BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import AdminPanel from '../../admin/AdminPanel';
 import Login from '../../auth/Login';
 import Registration from '../../auth/Registration';
 
@@ -62,6 +63,7 @@ componentDidMount(){
                 <Route exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Registration} />
+                <Route exact path="/admin" component={AdminPanel} />
             </Switch>
         </Router>
     
