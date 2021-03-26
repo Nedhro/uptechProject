@@ -149,9 +149,10 @@ class AdminPanel extends React.Component<any, any>{
           } else {
         return(
             <div className="container">
-                <h2> Table : Registration Data</h2>
+                <h4> Table : Registration Data</h4>
+                <p className="text-left text-danger bg-info font-weight-bold">{notification}</p>
                 <ReactFlexyTable
-                className="table table-stripped table-hover table-sm tableReg"
+                className="table table-stripped table-hover table-sm tableReg mb-1"
                 data={items}
                 sortable
                 columns = {columns}
@@ -168,9 +169,6 @@ class AdminPanel extends React.Component<any, any>{
                 totalDataText={"Total Data :"}
                 downloadExcelText={"Download"}
               />
-               <div className="text-danger">
-                  <p className="text-left bg-info font-weight-bold">{notification}</p>
-                </div>
             </div>
             )}
     }

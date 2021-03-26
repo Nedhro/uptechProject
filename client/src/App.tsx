@@ -11,7 +11,7 @@ function App() {
       </header>
       <AppHeader/>
       <footer>
-        <div className="container-fliud text-center footer">
+        <div className="container-fliud text-center footer pt-2 mb-0 pb-0">
           <p>Copyright &copy; {new Date().getFullYear()} || All right reserved || Nidhro</p>
         </div>
       </footer>
